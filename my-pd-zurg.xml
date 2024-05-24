@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>pd_zurg</Name>
+  <Beta>false</Beta>
+  <Category>Downloaders: MediaApp: MediaServer:</Category>
+  <Repository>iampuid0/pd_zurg</Repository>
+  <Registry>https://hub.docker.com/r/iampuid0/pd_zurg</Registry> 
+  <DonateText></DonateText>
+  <DonateLink></DonateLink>
+  <DonateImg></DonateImg>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/I-am-PUID-0/pd_zurg/issues</Support> 
+  <Shell>bash</Shell>
+  <GitHub>https://github.com/I-am-PUID-0/pd_zurg</GitHub>
+  <ReadMe>https://github.com/I-am-PUID-0/pd_zurg</ReadMe>
+  <Project>https://github.com/I-am-PUID-0/pd_zurg</Project>
+  <Overview>Stream torrents directly to Plex/Emby/Jellyfin/Infuse through Debrid Services, using Plex Discover Watchlists, Trakt lists, and Overseerr. Leverages plex_debrid, zurg, and rclone combined in a single Docker image for faster deployment.</Overview>
+  <TemplateURL></TemplateURL> 
+  <Icon>https://raw.githubusercontent.com/I-am-PUID-0/pd_zurg/develop/assets/icon.png</Icon> 
+
+  <ExtraParams>
+    --cap-add SYS_ADMIN --device /dev/fuse:/dev/fuse:rwm --security-opt apparmor:unconfined 
+    --security-opt no-new-privileges -v /mnt/user/realdebrid:/data:rshared 
+    --env RCLONE_MOUNT_OPTIONS="--allow-other --buffer-size 2G --vfs-cache-mode full --umask 002 --allow-non-empty"
+  </ExtraParams>
+
+  <Date></Date>
+  <Changes></Changes>
+
+  <Config Name="Path: /config" Target="/config" Default="/mnt/user/appdata/pd_zurg/config" Mode="rw" Description="Required: Stores configuration files for pd_zurg, Zurg, rclone, etc. Create this directory if it doesn't exist. See the GitHub guide for configuration instructions." Type="Path" Display="always" Required="true" Mask="false"/>
+
+  <Config Name="Path: /cache" Target="/cache" Default="/mnt/user/appdata/pd_zurg/cache" Mode="rw" Description="Optional: Cache directory for rclone. Improves performance for cloud storage. Create this directory if you want to use rclone caching." Type="Path" Display="always" Required="false" Mask="false"/>
+
+  <Config Name="ZURG_ENABLED" Target="ZURG_ENABLED" Default="true" Mode="" Description="Required: Enable Zurg (torrent client) functionality. Set to 'false' to disable Zurg if you only want to use plex_debrid." Type="Variable" Display="always" Required="false" Mask="false"/>
+  <Config Name="RD_API_KEY" Target="RD_API_KEY" Default="" Mode="" Description="MANDATORY: Your RealDebrid API key. Obtain this from your RealDebrid account settings." Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="ZURG_LOG_LEVEL" Target="ZURG_LOG_LEVEL" Default="INFO" Mode="" Description="Optional: Set the level of detail for Zurg's logs (INFO, DEBUG, WARNING, ERROR). Refer to the GitHub guide for logging instructions." Type="Variable" Display="advanced" Required="false" Mask="false"/> 
+  <Config Name="ZURG_UPDATE" Target="ZURG_UPDATE" Default="true" Mode="" Description="Optional: Enable automatic updates for Zurg. Disable if you want to manually manage updates." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="PLEX_REFRESH" Target="PLEX_REFRESH" Default="true" Mode="" Description="Optional: Automatically refresh your Plex library after downloads. Disable if you prefer manual refreshes." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="PLEX_MOUNT_DIR" Target="PLEX_MOUNT_DIR" Default="/realdebrid" Mode="" Description="Optional: Set the mount directory for Plex within the container (default: /realdebrid). Usually, you don't need to change this." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <Config Name="RCLONE_MOUNT_NAME" Target="RCLONE_MOUNT_NAME" Default="realdebrid" Mode="" Description="Required: Name for the rclone mount within the container. Usually, you don't need to change this." Type="Variable" Display="always" Required="false" Mask="false"/>
+  <Config Name="RCLONE_LOG_LEVEL" Target="RCLONE_LOG_LEVEL" Default="INFO" Mode="" Description="Optional: Set the level of detail for rclone's logs (INFO, DEBUG, WARNING, ERROR). Refer to the rclone documentation for logging details." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="RCLONE_DIR_CACHE_TIME" Target="RCLONE_DIR_CACHE_TIME" Default="10s" Mode="" Description="Optional: Time to cache directory entries for rclone (default: 10 seconds). Increase this for slower connections." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="RCLONE_VFS_CACHE_MODE" Target="RCLONE_VFS_CACHE_MODE" Default="full" Mode="" Description="Optional: Set the VFS cache mode for rclone (off, minimal, writes, full). 'full' is recommended for better performance with WebDAV remotes like RealDebrid." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="RCLONE_VFS_CACHE_MAX_SIZE" Target="RCLONE_VFS_CACHE_MAX_SIZE" Default="300G" Mode="" Description="Optional: Maximum size of the rclone VFS cache. Set this according to your available disk space." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <Config Name="PD_ENABLED" Target="PD_ENABLED" Default="true" Mode="" Description="Required: Enable plex_debrid (torrent streaming) functionality. Set to 'false' to disable plex_debrid if you only want to use Zurg." Type="Variable" Display="always" Required="false" Mask="false"/>
+  <Config Name="PD_UPDATE" Target="PD_UPDATE" Default="true" Mode="" Description="Optional: Enable automatic updates for plex_debrid. Disable if you want to manually manage updates." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+
+  <Config Name="PUID" Target="PUID" Default="99" Mode="" Description="Optional: User ID (UID) for the container to run as. This should match the UID of the user who owns the media directories on your Unraid server. See the Unraid documentation for user management." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="PGID" Target="PGID" Default="100" Mode="" Description="Optional: Group ID (GID) for the container to run as. This should match the GID of the group that has access to the media directories on your Unraid server. See the Unraid documentation for user management." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="TZ" Target="TZ" Default="Etc/UTC" Mode="" Description="Optional: Timezone for the container (default: UTC). Set to your local timezone (e.g., America/New_York) to ensure accurate timestamps in logs and downloads." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+</Container>
