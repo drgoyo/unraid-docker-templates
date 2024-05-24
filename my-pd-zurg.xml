@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>pd_zurg</Name>
-  <Beta>false</Beta>
+  <Beta>true</Beta>
   <Category>Downloaders: MediaApp: MediaServer:</Category>
   <Repository>iampuid0/pd_zurg</Repository>
   <Registry>https://hub.docker.com/r/iampuid0/pd_zurg</Registry> 
