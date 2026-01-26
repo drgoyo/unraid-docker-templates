@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Repository>
+  <Name>drgoyo's Optimized Templates</Name>
+  <Description>High-performance Docker templates for Riven, Zilean, and media automation. Optimized for Dual-Stack (IPv4/IPv6) networking and NVMe storage.</Description>
+  <Site>https://github.com/drgoyo/unraid-docker-templates</Site>
+  <Support>https://forums.unraid.net/topic/XXXXX-support-drgoyos-templates/</Support>
+  <Icon>https://raw.githubusercontent.com/rivenmedia/riven/main/assets/riven-dark.png</Icon>
+</Repository>
