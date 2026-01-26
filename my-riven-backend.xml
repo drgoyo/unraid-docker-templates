@@ -9,21 +9,19 @@
   <MyIP>192.168.31.233</MyIP>
   <Privileged>false</Privileged>
   <Support>https://github.com/rivenmedia/riven/issues</Support>
-  <Shell>bash</Shell>
-  <GitHub>https://github.com/rivenmedia/riven</GitHub>
-  <ReadMe>https://github.com/rivenmedia/riven</ReadMe>
   <Project>https://github.com/rivenmedia/riven</Project>
-  <Overview>Riven is a high-performance media management engine for Real-Debrid.[br][br][b]CRITICAL SETUP:[/b][br]1. You MUST run the [b]riven-vfs-init[/b] User Script at array startup.[br]2. Map /library using [b]RW: Slave[/b].[br]3. [b]API KEYS:[/b] You must generate a secure 32-character API key. Use the [url=https://riven.tv/generator]Riven Compose Generator[/url] to create one easily.</Overview>
-  <WebUI/>
+  <Overview>
+    [b][span style='color: #E2211C;']⚠️ CRITICAL INSTALL STEPS:[/span][/b][br][br]
+    1. [b]User Script Required:[/b] You MUST run a script to set your mount point to 'shared'. [url=https://github.com/YourRepo/README.md]See README for script code.[/url][br]
+    2. [b]Mount Mode:[/b] Set your /library path to [b]RW: Slave[/b] in the path settings.[br]
+    3. [b]Secrets:[/b] Generate your secure keys at [url=https://riven.tv/generator]riven.tv/generator[/url].
+  </Overview>
+  <Requires>User Scripts Plugin (for rshared mount)</Requires>
   <Icon>https://raw.githubusercontent.com/rivenmedia/riven/main/assets/riven-dark.png</Icon>
   <ExtraParams>--cap-add=SYS_ADMIN --device=/dev/fuse --security-opt apparmor:unconfined --shm-size=2G</ExtraParams>
 
-  <Config Name="Path: /library" Target="/library" Default="/mnt/vmdisk/realdebrid" Mode="rw:slave" Description="The FUSE mount point. MUST BE SET TO RW:SLAVE." Type="Path" Display="always" Required="true" Mask="false"/>
-  <Config Name="Path: /riven/data" Target="/riven/data" Default="/mnt/vmdisk/appdata/riven/data" Mode="rw" Description="Persistent metadata and database storage." Type="Path" Display="always" Required="true" Mask="false"/>
-  <Config Name="RIVEN_DATABASE_HOST" Target="RIVEN_DATABASE_HOST" Default="postgresql+psycopg2://postgres:ff800ef8ca4f49a45d7bc63a@[fdcf:bbfb:5598::234]:5432/riven" Mode="" Description="Postgres connection string." Type="Variable" Display="always" Required="true" Mask="false"/>
-  <Config Name="RIVEN_API_KEY" Target="RIVEN_API_KEY" Default="" Mode="" Description="Generate a 32-character key at riven.tv/generator or via terminal: openssl rand -hex 16" Type="Variable" Display="always" Required="true" Mask="true"/>
-  <Config Name="RIVEN_FILESYSTEM_MOUNT_PATH" Target="RIVEN_FILESYSTEM_MOUNT_PATH" Default="/library" Mode="" Description="Internal container path for the VFS mount." Type="Variable" Display="advanced" Required="true" Mask="false"/>
-  <Config Name="PUID" Target="PUID" Default="99" Mode="" Description="User ID" Type="Variable" Display="advanced" Required="false" Mask="false"/>
-  <Config Name="PGID" Target="PGID" Default="100" Mode="" Description="Group ID" Type="Variable" Display="advanced" Required="false" Mask="false"/>
-  <Config Name="TZ" Target="TZ" Default="Europe/Berlin" Mode="" Description="Timezone" Type="Variable" Display="always" Required="false" Mask="false"/>
+  <Config Name="Path: /library" Target="/library" Default="/mnt/user/realdebrid" Mode="rw:slave" Description="MANDATORY: Set this to RW: Slave. This is the virtual folder where your debrid files appear." Type="Path" Display="always" Required="true" Mask="false"/>
+  <Config Name="Path: /riven/data" Target="/riven/data" Default="/mnt/user/appdata/riven/data" Mode="rw" Description="Persistent metadata and DB storage. Use an NVMe disk for best performance." Type="Path" Display="always" Required="true" Mask="false"/>
+  <Config Name="RIVEN_DATABASE_HOST" Target="RIVEN_DATABASE_HOST" Default="postgresql+psycopg2://postgres:DB_PASSWORD@[fdcf:bbfb:5598::234]:5432/riven" Mode="" Description="Format: postgresql+psycopg2://user:pass@IP:5432/db_name" Type="Variable" Display="always" Required="true" Mask="false"/>
+  <Config Name="RIVEN_API_KEY" Target="RIVEN_API_KEY" Default="" Mode="" Description="Secure 32-character key. Must match Frontend API key." Type="Variable" Display="always" Required="true" Mask="true"/>
 </Container>

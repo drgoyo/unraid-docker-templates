@@ -4,18 +4,16 @@
   <Beta>false</Beta>
   <Category>MediaApp:Organization</Category>
   <Repository>ipromknight/zilean:latest</Repository>
-  <Registry>https://hub.docker.com/r/ipromknight/zilean</Registry>
   <Network>eth0</Network>
   <MyIP>192.168.31.235</MyIP>
-  <Privileged>false</Privileged>
   <Support>https://github.com/iPromKnight/zilean/issues</Support>
-  <Shell>sh</Shell>
-  <GitHub>https://github.com/iPromKnight/zilean</GitHub>
-  <Project>https://github.com/iPromKnight/zilean</Project>
-  <Overview>DMM Hashlist Indexer for Riven. [br][br][b]NOTE:[/b] During first run, Zilean indexes massive hashlists. It will consume ~6-7GB of RAM during this phase. This is normal.</Overview>
+  <Overview>
+    [b]DMM Hashlist Indexer[/b][br][br]
+    [b]Performance Tip:[/b] During the first 60 minutes, Zilean will download massive hashlists. [b]RAM usage will spike to 6-7GB[/b]. This is normal.[br][br]
+    [b]Ryzen Fix:[/b] This template includes seccomp=unconfined to prevent 'Exit 139' crashes on Ryzen PRO/G-series CPUs.
+  </Overview>
   <WebUI>http://192.168.31.235:8181</WebUI>
   <Icon>https://raw.githubusercontent.com/iPromKnight/zilean/main/src/Zilean.ApiService/wwwroot/images/zilean-logo.png</Icon>
-
-  <Config Name="Path: /app/data" Target="/app/data" Default="/mnt/vmdisk/appdata/zilean" Mode="rw" Description="Storage for the Zilean SQLite database." Type="Path" Display="always" Required="true" Mask="false"/>
-  <Config Name="TZ" Target="TZ" Default="Europe/Berlin" Mode="" Description="Timezone" Type="Variable" Display="always" Required="false" Mask="false"/>
+  <ExtraParams>--security-opt seccomp=unconfined</ExtraParams>
+  <Config Name="Appdata Path" Target="/app/data" Default="/mnt/user/appdata/zilean" Mode="rw" Description="Stores the SQLite database of indexed hashes." Type="Path" Display="always" Required="true" Mask="false"/>
 </Container>

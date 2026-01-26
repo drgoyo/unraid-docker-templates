@@ -1,23 +1,16 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>riven-frontend</Name>
-  <Beta>false</Beta>
-  <Category>MediaApp:WebGui</Category>
   <Repository>spoked/riven-frontend:dev</Repository>
-  <Registry>https://hub.docker.com/r/spoked/riven-frontend</Registry>
   <Network>eth0</Network>
   <MyIP>192.168.31.232</MyIP>
-  <Privileged>false</Privileged>
-  <Support>https://github.com/rivenmedia/riven/issues</Support>
-  <Shell>sh</Shell>
-  <Project>https://github.com/rivenmedia/riven</Project>
-  <Overview>Web UI for Riven. [br][br][b]NOTE:[/b] Ensure the API Key matches the one set in your Riven Backend container.</Overview>
+  <Overview>
+    [b]Riven Web Interface[/b][br][br]
+    [b]Configuration Note:[/b] The ORIGIN variable must include the protocol (http://) and the port (:3000) to avoid 'Invalid Origin' errors during login.
+  </Overview>
   <WebUI>http://192.168.31.232:3000</WebUI>
   <Icon>https://raw.githubusercontent.com/rivenmedia/riven/main/assets/riven-light.png</Icon>
-
-  <Config Name="Path: /riven/data" Target="/riven/data" Default="/mnt/vmdisk/appdata/riven/frontend" Mode="rw" Description="Frontend configuration storage." Type="Path" Display="always" Required="true" Mask="false"/>
-  <Config Name="BACKEND_URL" Target="BACKEND_URL" Default="http://[fdcf:bbfb:5598::233]:8080" Mode="" Description="IPv6 Backend URL." Type="Variable" Display="always" Required="true" Mask="false"/>
-  <Config Name="ORIGIN" Target="ORIGIN" Default="http://192.168.31.232:3000" Mode="" Description="MUST include the port (e.g., :3000) to avoid 'Invalid Origin' errors." Type="Variable" Display="always" Required="true" Mask="false"/>
-  <Config Name="BACKEND_API_KEY" Target="BACKEND_API_KEY" Default="" Mode="" Description="Must match the API Key in the Backend template." Type="Variable" Display="always" Required="true" Mask="true"/>
-  <Config Name="AUTH_SECRET" Target="AUTH_SECRET" Default="" Mode="" Description="Generate at riven.tv/generator or via terminal: openssl rand -base64 32" Type="Variable" Display="advanced" Required="true" Mask="true"/>
+  <Config Name="ORIGIN" Target="ORIGIN" Default="http://192.168.31.232:3000" Mode="" Description="IMPORTANT: This must match the URL you type in your browser exactly." Type="Variable" Display="always" Required="true" Mask="false"/>
+  <Config Name="BACKEND_URL" Target="BACKEND_URL" Default="http://[fdcf:bbfb:5598::233]:8080" Mode="" Description="The address of your Riven Backend container." Type="Variable" Display="always" Required="true" Mask="false"/>
+  <Config Name="AUTH_SECRET" Target="AUTH_SECRET" Default="" Mode="" Description="Generate a Base64 secret at riven.tv/generator." Type="Variable" Display="always" Required="true" Mask="true"/>
 </Container>
