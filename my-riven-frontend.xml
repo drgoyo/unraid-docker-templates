@@ -2,15 +2,28 @@
 <Container version="2">
   <Name>riven-frontend</Name>
   <Repository>spoked/riven-frontend:dev</Repository>
+  <Registry>https://hub.docker.com/r/spoked/riven-frontend</Registry>
   <Network>eth0</Network>
   <MyIP>192.168.31.232</MyIP>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/rivenmedia/riven-frontend/issues</Support>
+  <Project>https://github.com/rivenmedia/riven-frontend</Project>
   <Overview>
-    [b]Riven Web Interface[/b][br][br]
-    [b]Configuration Note:[/b] The ORIGIN variable must include the protocol (http://) and the port (:3000) to avoid 'Invalid Origin' errors during login.
+    [b][span style='color: #E2211C;']🚀 CRITICAL INITIAL SETUP:[/span][/b][br][br]
+    [b]1. Generate Keys:[/b] Visit [url=https://riven.tv/generator]https://riven.tv/generator[/url] to create your API Key and Auth Secret.[br]
+    [b]2. First Login:[/b] Enter your [b]Plex Username[/b] in the Admin field and set [b]ENABLE_PLEX_SIGNUP[/b] to [b]true[/b]. [br]
+    [b]3. Browser Security:[/b] If accessing via HTTP, you MUST enable the Chrome flag: [i]chrome://flags/#unsafely-treat-insecure-origin-as-secure[/i] and add this IP:3000 to the list, or login will fail.
   </Overview>
   <WebUI>http://192.168.31.232:3000</WebUI>
   <Icon>https://raw.githubusercontent.com/rivenmedia/riven/main/assets/riven-light.png</Icon>
-  <Config Name="ORIGIN" Target="ORIGIN" Default="http://192.168.31.232:3000" Mode="" Description="IMPORTANT: This must match the URL you type in your browser exactly." Type="Variable" Display="always" Required="true" Mask="false"/>
-  <Config Name="BACKEND_URL" Target="BACKEND_URL" Default="http://[fdcf:bbfb:5598::233]:8080" Mode="" Description="The address of your Riven Backend container." Type="Variable" Display="always" Required="true" Mask="false"/>
-  <Config Name="AUTH_SECRET" Target="AUTH_SECRET" Default="" Mode="" Description="Generate a Base64 secret at riven.tv/generator." Type="Variable" Display="always" Required="true" Mask="true"/>
+
+  <Config Name="ORIGIN" Target="ORIGIN" Default="http://192.168.31.232:3000" Mode="" Description="The full URL used to access this page. Must match your browser address bar exactly. No trailing slash." Type="Variable" Display="always" Required="true" Mask="false"/>
+  <Config Name="BACKEND_URL" Target="BACKEND_URL" Default="http://192.168.31.233:8080" Mode="" Description="The internal IPv4 address of the Riven-Backend container." Type="Variable" Display="always" Required="true" Mask="false"/>
+  <Config Name="BACKEND_API_KEY" Target="BACKEND_API_KEY" Default="" Mode="" Description="32-char hex key from riven.tv/generator. Must match Backend API key." Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="AUTH_SECRET" Target="AUTH_SECRET" Default="" Mode="" Description="Base64 string from riven.tv/generator." Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="RIVEN_ADMIN_USER" Target="RIVEN_ADMIN_USER" Default="" Mode="" Description="Your Plex username (case-sensitive) to grant admin rights on first login." Type="Variable" Display="always" Required="true" Mask="false"/>
+  <Config Name="ENABLE_PLEX_SIGNUP" Target="ENABLE_PLEX_SIGNUP" Default="true" Mode="" Description="Set to 'true' for the first login to allow account creation." Type="Variable" Display="always" Required="true" Mask="false">true</Config>
+  <Config Name="AUTH_TRUST_HOST" Target="AUTH_TRUST_HOST" Default="true" Mode="" Description="Mandatory for local IP authentication." Type="Variable" Display="advanced" Required="true" Mask="false">true</Config>
+  <Config Name="BETTER_AUTH_URL" Target="BETTER_AUTH_URL" Default="http://192.168.31.232:3000" Mode="" Description="Must match ORIGIN exactly." Type="Variable" Display="advanced" Required="true" Mask="false"/>
 </Container>

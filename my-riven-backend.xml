@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <Container version="2">
-  <Name>riven</Name>
-  <Beta>false</Beta>
-  <Category>MediaApp:Video MediaApp:Organization</Category>
+  <Name>riven-backend</Name>
   <Repository>spoked/riven:dev</Repository>
   <Registry>https://hub.docker.com/r/spoked/riven</Registry>
   <Network>eth0</Network>
@@ -11,17 +9,18 @@
   <Support>https://github.com/rivenmedia/riven/issues</Support>
   <Project>https://github.com/rivenmedia/riven</Project>
   <Overview>
-    [b][span style='color: #E2211C;']⚠️ CRITICAL INSTALL STEPS:[/span][/b][br][br]
-    1. [b]User Script Required:[/b] You MUST run a script to set your mount point to 'shared'. [url=https://github.com/YourRepo/README.md]See README for script code.[/url][br]
-    2. [b]Mount Mode:[/b] Set your /library path to [b]RW: Slave[/b] in the path settings.[br]
-    3. [b]Secrets:[/b] Generate your secure keys at [url=https://riven.tv/generator]riven.tv/generator[/url].
+    [b]Riven Media Management Engine[/b][br][br]
+    [b][span style='color: #E2211C;']⚠️ MANDATORY PREREQUISITES:[/span][/b][br]
+    1. [b]User Script:[/b] Run a script at Array Start: [i]mount --make-shared /mnt/vmdisk[/i].[br]
+    2. [b]Slave Mode:[/b] Set the /library path to [b]RW: Slave[/b].[br]
+    3. [b]Permissions:[/b] If logs show 'Permission Denied', run [i]chown -R 99:100 /mnt/vmdisk/appdata/riven[/i] in terminal.
   </Overview>
-  <Requires>User Scripts Plugin (for rshared mount)</Requires>
   <Icon>https://raw.githubusercontent.com/rivenmedia/riven/main/assets/riven-dark.png</Icon>
   <ExtraParams>--cap-add=SYS_ADMIN --device=/dev/fuse --security-opt apparmor:unconfined --shm-size=2G</ExtraParams>
 
-  <Config Name="Path: /library" Target="/library" Default="/mnt/user/realdebrid" Mode="rw:slave" Description="MANDATORY: Set this to RW: Slave. This is the virtual folder where your debrid files appear." Type="Path" Display="always" Required="true" Mask="false"/>
-  <Config Name="Path: /riven/data" Target="/riven/data" Default="/mnt/user/appdata/riven/data" Mode="rw" Description="Persistent metadata and DB storage. Use an NVMe disk for best performance." Type="Path" Display="always" Required="true" Mask="false"/>
-  <Config Name="RIVEN_DATABASE_HOST" Target="RIVEN_DATABASE_HOST" Default="postgresql+psycopg2://postgres:DB_PASSWORD@[fdcf:bbfb:5598::234]:5432/riven" Mode="" Description="Format: postgresql+psycopg2://user:pass@IP:5432/db_name" Type="Variable" Display="always" Required="true" Mask="false"/>
-  <Config Name="RIVEN_API_KEY" Target="RIVEN_API_KEY" Default="" Mode="" Description="Secure 32-character key. Must match Frontend API key." Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="Path: /library" Target="/library" Default="/mnt/vmdisk/realdebrid" Mode="rw:slave" Description="The virtual FUSE mount point. Ensure host path is made 'shared' via user script and set to RW:Slave." Type="Path" Display="always" Required="true" Mask="false"/>
+  <Config Name="Path: /riven/data" Target="/riven/data" Default="/mnt/vmdisk/appdata/riven/data" Mode="rw" Description="Persistent metadata storage. NVMe recommended." Type="Path" Display="always" Required="true" Mask="false"/>
+  <Config Name="RIVEN_DATABASE_HOST" Target="RIVEN_DATABASE_HOST" Default="postgresql+psycopg2://postgres:PASS@192.168.31.234:5432/riven" Mode="" Description="Replace PASS with your Postgres password." Type="Variable" Display="always" Required="true" Mask="false"/>
+  <Config Name="RIVEN_API_KEY" Target="RIVEN_API_KEY" Default="" Mode="" Description="32-char hex key from riven.tv/generator. Must match Frontend API key." Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="RIVEN_FORCE_ENV" Target="RIVEN_FORCE_ENV" Default="true" Mode="" Description="Forces environment variables to override database settings." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
 </Container>

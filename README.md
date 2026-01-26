@@ -7,7 +7,7 @@ This repository provides native Unraid XML templates for **Riven** and **Zilean*
 ## 📖 Official Documentation & Links
 
 | Project | GitHub Repository | Documentation |
-| :--- | :--- | :--- |
+| --- | --- | --- |
 | **Riven** | [RivenMedia/Riven](https://github.com/rivenmedia/riven) | [Riven Wiki](https://wiki.riven.stream/) |
 | **Zilean** | [iPromKnight/Zilean](https://github.com/iPromKnight/zilean) | [Zilean Repo](https://github.com/iPromKnight/zilean#readme) |
 
@@ -19,46 +19,93 @@ Riven uses a FUSE filesystem to mount your Real-Debrid library. Because Unraid's
 
 1. Install the **User Scripts** plugin from Community Apps.
 2. Create a new script named `riven-vfs-init`.
-3. Paste the following code:
-   ```bash
-   #!/bin/bash
-   # Create the mount point and set propagation to shared
-   mkdir -p /mnt/vmdisk/realdebrid
-   mount --make-shared /mnt/vmdisk
-Set the schedule to "At Startup of Array" and run it once manually.
+3. Paste the following code (replace `/mnt/vmdisk` with your actual drive path):
+```bash
+#!/bin/bash
+# Create the mount point and set propagation to shared
+mkdir -p /mnt/vmdisk/realdebrid
+mount --make-shared /mnt/vmdisk
 
-📂 Storage & Path Guidelines (Best Practices)
-To ensure stability and prevent recursive folder loops, these templates enforce a strict separation between Config (Appdata) and Media (VFS Mount).
+```
 
-Appdata (Metadata/DB): /mnt/vmdisk/appdata/riven/ -> Fast NVMe access for database snappiness.
 
-Media (VFS Mount): /mnt/vmdisk/realdebrid/ -> The virtual folder where your content appears.
+4. Set the schedule to **"At Startup of Array"** and run it once manually.
 
-[!CAUTION] Access Mode: In the Riven container settings, ensure the mapping for /library is set to RW: Slave. If set to standard Read/Write, the files will not be visible to other containers like Plex.
+---
 
-🌐 Networking: Dual-Stack Macvlan (eth0)
-These templates use Custom: eth0 to assign dedicated IP addresses. This bypasses the Unraid bridge and eliminates the "Broken Pipe" database errors common in complex Docker setups.
+## 🔐 Initial Setup & Authentication (The "First Login" Fix)
 
-Riven Frontend: 192.168.31.232 | [fdcf:bbfb:5598::232]
+Riven v1.x uses **Better Auth**, which is extremely strict about local IP security and user registration. To successfully log in for the first time:
 
-Riven Backend: 192.168.31.233 | [fdcf:bbfb:5598::233]
+### **1. Generate Secrets**
 
-Riven DB: 192.168.31.234 | [fdcf:bbfb:5598::234]
+Visit [riven.tv/generator](https://riven.tv/generator) to generate your:
 
-Zilean: 192.168.31.235 | [fdcf:bbfb:5598::235]
+* **Backend API Key** (32-char Hex)
+* **Auth Secret** (Base64 string)
 
-⚡ Performance & RAM Optimization
-SHM (Shared Memory): Riven is pre-configured with 2GB SHM and the Database with 1GB SHM. This protects the metadata engine from crashes, especially on systems running heavy VMs (like Windows 11).
+### **2. Bypass "Signup Disabled"**
 
-Zilean Indexing: On the first run, Zilean will download and index the DMM hashlists. Expect RAM usage to spike to 6-7GB for approximately 30-60 minutes. This is normal behavior.
+On a fresh install, no users exist. To create your account:
 
-🧩 How to Install
-Add Repository: Copy the URL of this GitHub repository.
+* Set `ENABLE_PLEX_SIGNUP` to `true` in the **Frontend** template.
+* Set `RIVEN_ADMIN_USER` to your exact **Plex Username** (Case-Sensitive).
 
-Community Apps: Go to the Apps tab in Unraid, click Settings, and add this URL to your "Additional Repositories".
+### **3. Fix "No Auth State Cookie" (Chrome/Edge)**
 
-Deploy Order: * Start riven-db and zilean first.
+If accessing Riven via a local IP (`http://192.168.x.x`), Chrome will block secure cookies.
 
-Wait for Zilean to finish its initial indexing.
+* **Firefox:** Works natively without extra steps.
+* **Chrome/Edge:** Navigate to `chrome://flags/#unsafely-treat-insecure-origin-as-secure`.
+* Enable the flag and add `http://192.168.31.232:3000` to the text area. Relaunch your browser.
 
-Start riven (Backend) and then riven-frontend.
+---
+
+## 📂 Storage & Path Guidelines
+
+* **Appdata (Metadata/DB):** `/mnt/vmdisk/appdata/riven/` -> Recommended on NVMe for performance.
+* **Media (VFS Mount):** `/mnt/vmdisk/realdebrid/` -> The virtual folder where content appears.
+* **Access Mode:** You **MUST** set the `/library` path mapping to **RW: Slave** in the Riven template settings.
+
+---
+
+## 🌐 Networking: Dual-Stack Macvlan (eth0)
+
+These templates use **Custom: eth0** to assign dedicated IP addresses, bypassing the Unraid bridge to eliminate "Broken Pipe" database errors.
+
+* **Riven Frontend:** `192.168.31.232`
+* **Riven Backend:** `192.168.31.233`
+* **Riven DB:** `192.168.31.234`
+* **Zilean:** `192.168.31.235`
+
+---
+
+## ⚡ Performance & Troubleshooting
+
+### **Zilean RAM Usage**
+
+During the first 60 minutes, Zilean downloads massive hashlists. RAM usage will spike to **6-8GB**. This is normal. It will drop significantly once indexing is complete.
+
+### **Ryzen/Intel Crash Fix**
+
+These templates include the `--security-opt seccomp=unconfined` parameter to prevent the "Exit 139" Segfaults common on Ryzen and newer Intel CPUs.
+
+### **Permission Denied**
+
+If logs show permission errors, run this in your Unraid terminal:
+
+```bash
+chown -R 99:100 /mnt/vmdisk/appdata/riven
+
+```
+
+---
+
+## 🧩 How to Install
+
+1. **Add Repository:** Copy the URL of this GitHub repository.
+2. **Community Apps:** Go to **Apps** > **Settings** > **Additional Repositories** and add the URL.
+3. **Order of Deployment:**
+* Start `riven-db` and `zilean` first.
+* Wait for Zilean to finish indexing (check logs).
+* Start `riven-backend`, then `riven-frontend`.

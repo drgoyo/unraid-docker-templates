@@ -1,23 +1,15 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>riven-db</Name>
-  <Beta>false</Beta>
-  <Category>Cloud: Database</Category>
   <Repository>postgres:17-alpine</Repository>
-  <Registry>https://hub.docker.com/r/_/postgres</Registry>
   <Network>eth0</Network>
   <MyIP>192.168.31.234</MyIP>
-  <Privileged>false</Privileged>
-  <Support>https://forums.unraid.net/</Support>
-  <Shell>sh</Shell>
-  <Project>https://www.postgresql.org/</Project>
-  <Overview>Optimized PostgreSQL 17 database for Riven.</Overview>
+  <Overview>PostgreSQL 17 for Riven. Optimized for Dual-Stack Macvlan setups.</Overview>
   <Icon>https://raw.githubusercontent.com/walkxcode/dashboard-icons/master/png/postgresql.png</Icon>
   <ExtraParams>--shm-size=1G</ExtraParams>
 
-  <Config Name="Path: /var/lib/postgresql/data/pgdata" Target="/var/lib/postgresql/data/pgdata" Default="/mnt/vmdisk/appdata/riven/db" Mode="rw" Description="Postgres database files." Type="Path" Display="always" Required="true" Mask="false"/>
-  <Config Name="POSTGRES_DB" Target="POSTGRES_DB" Default="riven" Mode="" Description="Database name." Type="Variable" Display="always" Required="true" Mask="false"/>
-  <Config Name="POSTGRES_USER" Target="POSTGRES_USER" Default="postgres" Mode="" Description="Database user." Type="Variable" Display="always" Required="true" Mask="false"/>
-  <Config Name="POSTGRES_PASSWORD" Target="POSTGRES_PASSWORD" Default="ff800ef8ca4f49a45d7bc63a" Mode="" Description="Database password." Type="Variable" Display="always" Required="true" Mask="true"/>
-  <Config Name="PGDATA" Target="PGDATA" Default="/var/lib/postgresql/data/pgdata" Mode="" Description="Internal data path." Type="Variable" Display="advanced" Required="true" Mask="false"/>
+  <Config Name="Database Data" Target="/var/lib/postgresql/data/pgdata" Default="/mnt/vmdisk/appdata/riven/db" Mode="rw" Description="Storage for Postgres data files." Type="Path" Display="always" Required="true" Mask="false"/>
+  <Config Name="POSTGRES_PASSWORD" Target="POSTGRES_PASSWORD" Default="" Mode="" Description="Create a secure password. Must match RIVEN_DATABASE_HOST string." Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="POSTGRES_USER" Target="POSTGRES_USER" Default="postgres" Mode="" Description="" Type="Variable" Display="advanced" Required="true" Mask="false">postgres</Config>
+  <Config Name="POSTGRES_DB" Target="POSTGRES_DB" Default="riven" Mode="" Description="" Type="Variable" Display="advanced" Required="true" Mask="false">riven</Config>
 </Container>
